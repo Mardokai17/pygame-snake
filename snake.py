@@ -28,13 +28,13 @@ DIRECTION_UP = (0, -1)
 DIRECTION_DOWN = (0, 1)
 
 # Background color of the snake grid.
-COLOR_BACKGROUND = (255, 255, 255)  # rgb color for white
+COLOR_BACKGROUND = (41,46,121)  # rgb color for green
 # This is the color of the snake's head. 
-COLOR_SNAKE_HEAD = (255, 0, 0)      # rgb color for red
+COLOR_SNAKE_HEAD = (245,237,49)     # rgb color for blue
 # This is the color of the rest of the snake.
-COLOR_SNAKE = (0, 255, 0)           # rgb color for green
+COLOR_SNAKE = (107, 189, 70)          # rgb color for green
 # This is the color for the snake's food.
-COLOR_FOOD = (255, 200, 0)          # rgb color for orange
+COLOR_FOOD = (237,29,36)         # rgb color for orange
 # This is the color for the game over text.
 COLOR_GAME_OVER_TEXT = (0, 0, 0)    # rgb color for black
 
@@ -48,6 +48,10 @@ def get_direction(previous_direction, event_key):
         return DIRECTION_LEFT
     elif event_key == pygame.K_UP:
         return DIRECTION_UP
+    elif event_key == pygame.K_RIGHT:
+        return DIRECTION_RIGHT
+    elif event_key == pygame.K_DOWN:
+        return DIRECTION_DOWN
     return previous_direction
 
 def create_food_position():
@@ -55,7 +59,7 @@ def create_food_position():
     The first element is the x position. Must be an int between 0 and GRID_WIDTH - 1, inclusively.
     The second element is the y position. Must be an int between 0 and GRID_HEIGHT - 1, inclusively.
     """
-    return
+    return random.randrange(0,GRID_WIDTH - 1), random.randrange(0,GRID_HEIGHT - 1)
 
 def snake_ate_food(snake, food):
     """Returns whether food was eaten by the snake.
@@ -63,14 +67,26 @@ def snake_ate_food(snake, food):
     food - 2-tuple representing the position in the grid of the food
     This function should return True if the head of the snake is in the same position as food.
     """
-    return False
-
+    if snake[0] == food:
+        return True
+        create_food_position()
+    else:
+        return False
 def snake_ran_out_of_bounds(snake):
     """Returns whether the snake has ran off one of the four edges of the grid.
     snake - list of 2-tuples representing the positions of each snake segment
     Note that the grid is GRID_WIDTH cells wide and GRID_HEIGHT cells high.
     """
-    return False
+    if snake[0][0] >= (GRID_WIDTH-1):
+        return True
+    elif snake[0][0] <= 0:
+        return True
+    elif snake[0][1] >= (GRID_HEIGHT -1):
+        return True
+    elif snake[0][1] <= 0:
+        return True
+    else:
+        return False
 
 def snake_intersected_body(snake):
     """Returns whether the snake has ran into itself.
@@ -78,6 +94,8 @@ def snake_intersected_body(snake):
     The snake ran into itself if the position of the head is the same as the position
     of any of its body segments.
     """
+    if snake[0] in snake[1:-1]:
+        return True
     return False
 
 def get_score(snake):
@@ -86,14 +104,13 @@ def get_score(snake):
     The user earns 10 points for each of the segments in the snake.
     For example, if the snake has 25 segments, the score is 250.
     """
-    return 0
-
+    return (len(snake)- 10) * 10
 def get_game_over_text(score):
     """Returns the text to draw on the screen after the game is over.
     This text should contain 'Game Over' as well as the score.
     score - integer representing the current score of the game.
     """
-    return 'Game Over.'
+    return 'Game Over. Score:' + str(score)
 
 def get_snake_speed(snake):
     """Return the number of cells the snake should travel in one second.
@@ -101,6 +118,7 @@ def get_snake_speed(snake):
     The speed at the beginning of the game should be 5. Once the snake has eaten 10 pieces of food,
     the speed of the game should increase (by how much is up to you).
     """
+    
     return 5
 
 def move_snake(snake, direction, food):
