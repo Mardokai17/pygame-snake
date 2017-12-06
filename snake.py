@@ -45,13 +45,17 @@ def get_direction(previous_direction, event_key):
     If event_key does not correspond with any of the arrows keys, return previous_direction.
     """
     if event_key == pygame.K_LEFT:
-        return DIRECTION_LEFT
+        if previous_direction != DIRECTION_RIGHT:
+            return DIRECTION_LEFT
     elif event_key == pygame.K_UP:
-        return DIRECTION_UP
+        if previous_direction != DIRECTION_DOWN:
+            return DIRECTION_UP
     elif event_key == pygame.K_RIGHT:
-        return DIRECTION_RIGHT
+        if previous_direction != DIRECTION_LEFT:
+            return DIRECTION_RIGHT
     elif event_key == pygame.K_DOWN:
-        return DIRECTION_DOWN
+        if previous_direction != DIRECTION_UP:
+            return DIRECTION_DOWN
     return previous_direction
 
 def create_food_position():
@@ -118,8 +122,10 @@ def get_snake_speed(snake):
     The speed at the beginning of the game should be 5. Once the snake has eaten 10 pieces of food,
     the speed of the game should increase (by how much is up to you).
     """
-    
-    return 5
+    speed = 5
+    if get_score(snake) >= 50:
+        speed += 10
+    return speed
 
 def move_snake(snake, direction, food):
     """Moves the snake one space in the direction specified and returns whether food was eaten.
