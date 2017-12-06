@@ -81,13 +81,13 @@ def snake_ran_out_of_bounds(snake):
     snake - list of 2-tuples representing the positions of each snake segment
     Note that the grid is GRID_WIDTH cells wide and GRID_HEIGHT cells high.
     """
-    if snake[0][0] >= (GRID_WIDTH-1):
+    if snake[0][0] > (GRID_WIDTH-1):
         return True
-    elif snake[0][0] <= 0:
+    elif snake[0][0] < 0:
         return True
-    elif snake[0][1] >= (GRID_HEIGHT -1):
+    elif snake[0][1] > (GRID_HEIGHT -1):
         return True
-    elif snake[0][1] <= 0:
+    elif snake[0][1] < 0:
         return True
     else:
         return False
@@ -98,8 +98,9 @@ def snake_intersected_body(snake):
     The snake ran into itself if the position of the head is the same as the position
     of any of its body segments.
     """
-    if snake[0] in snake[1:-1]:
-        return True
+    for body in range(1,len(snake)):
+        if snake[body] == snake[0]:
+            return True
     return False
 
 def get_score(snake):
@@ -108,7 +109,9 @@ def get_score(snake):
     The user earns 10 points for each of the segments in the snake.
     For example, if the snake has 25 segments, the score is 250.
     """
-    return (len(snake)- 10) * 10
+    if len(snake) == INITIAL_SNAKE_LENGTH:
+        return 0
+    return len(snake) * 10
 def get_game_over_text(score):
     """Returns the text to draw on the screen after the game is over.
     This text should contain 'Game Over' as well as the score.
@@ -123,8 +126,8 @@ def get_snake_speed(snake):
     the speed of the game should increase (by how much is up to you).
     """
     speed = 5
-    if get_score(snake) >= 50:
-        speed += 10
+    if len(snake) >= 15 :
+        speed += 5
     return speed
 
 def move_snake(snake, direction, food):
@@ -281,3 +284,4 @@ def start_game():
 
 # Start the snake game.
 start_game()
+
